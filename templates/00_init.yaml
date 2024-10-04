@@ -1,0 +1,27 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+## template: jinja
+#cloud-config
+apt:
+  sources:
+    azure-cli:
+      keyid: BC528686B50D79E339D3721CEB3E94ADBE1229CF
+      source: deb [signed-by=$KEY_FILE] https://packages.microsoft.com/repos/azure-cli/ $RELEASE main
+fs_setup:
+  - label: consul
+    filesystem: ext4
+    device: /dev/disk/azure/scsi1/lun10
+    partition: auto
+mounts:
+  - [/dev/disk/azure/scsi1/lun10, /opt/consul/data, auto, defaults, "0", "2"]
+package_update: true
+packages:
+  - unzip
+  - azure-cli
+  - jq
+users:
+  - default
+  - name: consul
+    system: true
+    shell: /bin/false
