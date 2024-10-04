@@ -1,0 +1,32 @@
+
+#------------------------------------------------------------------------------
+# Common
+#------------------------------------------------------------------------------
+environment_name   = "<test>"
+region             = "<eastus>"
+availability_zones = ["1", "2", "3"]
+consul_datacenter  = "<dc1>"
+consul_version     = "1.19.2+ent"
+
+#------------------------------------------------------------------------------
+# Networking
+#------------------------------------------------------------------------------
+subnet_id = "</subscriptions/12345678-3210-abcd-01ef-abcd5678cdef4321/resourceGroups/my-rg-name/providers/Microsoft.Network/virtualNetworks/my-vnet-name/subnets/vault-subnet-name>"
+
+#------------------------------------------------------------------------------
+# Azure Key Vault installation secrets
+#------------------------------------------------------------------------------
+azure_keyvault_id = "</subscriptions/12345678-3210-abcd-01ef-abcd5678cdef4321/resourceGroups/my-rg-name/providers/Microsoft.KeyVault/vaults/example-kv>"
+
+#------------------------------------------------------------------------------
+# Compute
+#------------------------------------------------------------------------------
+consul_nodes   = 6 # 3 Availability Zones * 2 nodes per zone
+ssh_username   = "<azureuser>"
+ssh_public_key = "<ssh-rsa AAAA..>"
+
+#------------------------------------------------------------------------------
+# Snapshots
+#------------------------------------------------------------------------------
+storage_account_name  = "<consul>"
+object_container_name = "<dc1-snapshots>"

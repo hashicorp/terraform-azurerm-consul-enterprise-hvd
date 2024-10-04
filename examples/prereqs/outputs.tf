@@ -45,3 +45,8 @@ output "object_container_name" {
   description = "Name of the object container within the generated storage account."
   value       = azurerm_storage_container.consul_snapshots.name
 }
+
+output "ssh_public_ip" {
+  description = "Public IP of the bastion host for SSH access."
+  value       = azurerm_public_ip.bastion.ip_address
+}
