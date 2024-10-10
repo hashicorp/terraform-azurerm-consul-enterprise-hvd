@@ -1,4 +1,4 @@
-# Default Example
+# Default example
 
 This example deploys Consul Enterprise aligned with HashiCorp Validated Design. This is the minimum configuration required to standup a highly-available Consul Enterprise cluster with:
 
