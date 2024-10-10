@@ -38,7 +38,7 @@ data "terraform_remote_state" "prereqs" {
 }
 
 module "servers" {
-  source = "github.com/hashicorp-services/terraform-azurerm-consul-enterprise?ref=main"
+  source = "../../"
 
   region             = data.terraform_remote_state.prereqs.outputs.region
   availability_zones = ["1", "2", "3"]
