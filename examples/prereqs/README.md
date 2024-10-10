@@ -1,4 +1,4 @@
-# Consul on Azure Virtual Machines - Prerequisite Example Module
+# Consul Enterprise on Azure Virtual Machines - Prerequisite Example Module
 
 This module contains a baseline reference for the prerequisite resources needed to deploy the Consul Enterprise on Azure Virtual Machines Terraform module for HashiCorp Validated Designs.
 

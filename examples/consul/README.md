@@ -1,4 +1,4 @@
-# Consul on Azure Virtual Machines - Root Example Module
+# Consul Enterprise on Azure Virtual Machines - Root Example Module
 
 This directory contains a reference implementation of a root-level module which deploys the Consul Enterprise on Azure Virtual Machines Terraform module for HashiCorp Validated Designs.
 
