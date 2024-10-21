@@ -1,0 +1,30 @@
+#------------------------------------------------------------------------------
+# Networking
+#------------------------------------------------------------------------------
+  region             = <your-region>
+  availability_zones = [1,2,3]
+  subnet_id          = "</subscriptions/12345678-3210-abcd-01ef-abcd5678cdef4321/resourceGroups/my-rg-name/providers/Microsoft.Network/virtualNetworks/my-vnet-name/subnets/vault-subnet-name>"
+  environment_name   = "production"
+  consul_nodes       = 6  # 3 Availability Zones * 2 nodes per zone
+
+
+  ssh_public_key = <your-ssh-public-key>
+
+ consul_secrets = {
+    kind = "azure-keyvault"
+    azure_keyvault = {
+      id = <your-key_vault_servers_id>
+    }
+  }
+
+  consul_agent = {
+    bootstrap_acls = true
+    datacenter     = <your-datacenter>
+    version        = "1.19.2+ent"
+  }
+
+  snapshot_agent = {
+    enabled               = true
+    storage_account_name  = <storage_account_name>
+    object_container_name = <object_container_name>
+  }
