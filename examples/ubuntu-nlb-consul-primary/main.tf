@@ -37,8 +37,8 @@ data "terraform_remote_state" "prereqs" {
   }
 }
 
-module "servers" {
-  source = "../../"
+module "default" {
+  source = "../.."
 
   region             = var.region
   availability_zones = var.availability_zones
