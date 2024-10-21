@@ -86,7 +86,6 @@ Upon deployment, the following packages are installed:
 
 The VM Scale Set will attempt to use an Azure Platform Image for its base deployment. By default, this is configured to use Ubuntu 22.04 LTS. Alternative images may be provided by overriding the `image_reference` variable. See the [Azure Documentation](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage) for more information on discovering platform images.
 
-<!-- BEGIN_TF_DOCS -->
 ## Module support
 
 This open source software is maintained by the HashiCorp Technical Field Organization, independently of our enterprise products. While our Support Engineering team provides dedicated support for our enterprise offerings, this open source software is not included.
@@ -95,6 +94,9 @@ This open source software is maintained by the HashiCorp Technical Field Organiz
 - To report bugs/issues with this open source software, please open them directly against this code repository using the GitHub issues feature.
 
 Please note that there is no official Service Level Agreement (SLA) for support of this software as a HashiCorp customer. This software falls under the definition of Community Software/Versions in your Agreement. We appreciate your understanding and collaboration in improving our open source projects.
+
+<!-- BEGIN_TF_DOCS -->
+
 
 ## Requirements
 
