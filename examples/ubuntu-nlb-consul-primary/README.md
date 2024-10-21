@@ -23,28 +23,15 @@ $ terraform apply
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~>1.9 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.5.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~>3.113 |
 | <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | ~>2.3 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | ~>3.6 |
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_default"></a> [default](#module\_default) | ../.. | n/a |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [terraform_remote_state.prereqs](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
+| <a name="module_servers"></a> [servers](#module\_servers) | github.com/hashicorp/terraform-azurerm-consul-enterprise-hvd | init |
 
 ## Inputs
 

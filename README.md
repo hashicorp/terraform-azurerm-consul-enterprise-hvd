@@ -121,7 +121,7 @@ Please note that there is no official Service Level Agreement (SLA) for support 
 | [azurerm_lb_backend_address_pool.consul_servers](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/lb_backend_address_pool) | resource |
 | [azurerm_lb_probe.consul_health](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/lb_probe) | resource |
 | [azurerm_lb_rule.consul_tcp](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/lb_rule) | resource |
-| [azurerm_linux_virtual_machine_scale_set.agents](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine_scale_set) | resource |
+| [azurerm_linux_virtual_machine_scale_set.consul](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine_scale_set) | resource |
 | [azurerm_private_dns_a_record.consul](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_a_record) | resource |
 | [azurerm_private_dns_zone_virtual_network_link.consul](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone_virtual_network_link) | resource |
 | [azurerm_public_ip.consul_lb](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) | resource |
@@ -140,7 +140,7 @@ Please note that there is no official Service Level Agreement (SLA) for support 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | List of availability zones to deploy supported resources to. Only works in select regions. | `list(string)` | n/a | yes |
-| <a name="input_consul_agent"></a> [consul\_agent](#input\_consul\_agent) | Object containing the Consul Agent configuration. | <pre>object({<br/>    bootstrap_acls = optional(bool, true)<br/>    datacenter     = optional(string, "dc1")<br/>    version        = string<br/>  })</pre> | n/a | yes |
+| <a name="input_consul_agent"></a> [consul\_agent](#input\_consul\_agent) | Object containing the Consul Agent configuration. | <pre>object({<br/>    bootstrap_acls = optional(bool, true)<br/>    datacenter     = optional(string, "dc1")<br/>  })</pre> | n/a | yes |
 | <a name="input_consul_fqdn"></a> [consul\_fqdn](#input\_consul\_fqdn) | Fully qualified domain name of the consul cluster. This name __must__ match a SAN entry in the TLS server certificate. | `string` | n/a | yes |
 | <a name="input_consul_secrets"></a> [consul\_secrets](#input\_consul\_secrets) | Object containing the Azure Key consul secrets necessary to inject Consul Agent TLS, Gossip encryption material, and ACL tokens. | <pre>object({<br/>    kind = string<br/>    azure_keyvault = optional(object({<br/>      id = optional(string)<br/>    }), {})<br/>  })</pre> | n/a | yes |
 | <a name="input_environment_name"></a> [environment\_name](#input\_environment\_name) | Unique environment name to prefix and disambiguate resources using. | `string` | n/a | yes |
@@ -149,6 +149,7 @@ Please note that there is no official Service Level Agreement (SLA) for support 
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The ID of the subnet in which resources should be deployed. | `string` | n/a | yes |
 | <a name="input_vnet_id"></a> [vnet\_id](#input\_vnet\_id) | VNet ID where Vault resources will reside. | `string` | n/a | yes |
 | <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Map of common tags for taggable Azure resources. | `map(string)` | `{}` | no |
+| <a name="input_consul_install_version"></a> [consul\_install\_version](#input\_consul\_install\_version) | Version of Consul to install, eg. '1.19.2+ent' | `string` | `"1.19.2+ent"` | no |
 | <a name="input_consul_nodes"></a> [consul\_nodes](#input\_consul\_nodes) | Number of Consul instances. | `number` | `6` | no |
 | <a name="input_consul_vm_size"></a> [consul\_vm\_size](#input\_consul\_vm\_size) | The size of VM instance to use for Consul agents. | `string` | `"Standard_D2s_v3"` | no |
 | <a name="input_create_consul_private_dns_record"></a> [create\_consul\_private\_dns\_record](#input\_create\_consul\_private\_dns\_record) | Boolean to create a DNS record for consul in a private Azure DNS zone. `private_dns_zone_name` must also be provided when `true`. | `bool` | `false` | no |
