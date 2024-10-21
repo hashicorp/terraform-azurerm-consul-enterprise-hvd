@@ -31,7 +31,7 @@ $ terraform apply
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_servers"></a> [servers](#module\_servers) | github.com/hashicorp/terraform-azurerm-consul-enterprise-hvd | init |
+| <a name="module_default"></a> [default](#module\_default) | github.com/hashicorp/terraform-azurerm-consul-enterprise-hvd | init |
 
 ## Inputs
 

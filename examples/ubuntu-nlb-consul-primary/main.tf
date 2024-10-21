@@ -24,7 +24,7 @@ provider "azurerm" {
   }
 }
 
-module "servers" {
+module "default" {
   source = "github.com/hashicorp/terraform-azurerm-consul-enterprise-hvd?ref=init"
 
   region                 = var.region
