@@ -31,6 +31,15 @@ acl {
 auto_encrypt {
   allow_tls = true
 }
+telemetry {
+  prometheus_retention_time = "480h"
+  disable_hostname          = true
+}
+# Server performance config
+limits {
+  rpc_max_conns_per_client  = 100
+  http_max_conns_per_client = 200
+}
 
 autopilot {
   redundancy_zone_tag = "availability_zone"

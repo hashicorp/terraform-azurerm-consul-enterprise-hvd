@@ -13,7 +13,7 @@ data "cloudinit_config" "consul" {
 
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_consul.sh.tpl", local.install_vars)
+    content      = templatefile("${path.module}/templates/install_consul.sh.tpl", { consul_version = var.consul_install_version })
   }
 
   part {

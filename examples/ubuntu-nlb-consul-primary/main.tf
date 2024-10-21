@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 terraform {
-  required_version = "~>1.9"
+  required_version = ">=1.5.0"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -11,10 +11,6 @@ terraform {
     cloudinit = {
       source  = "hashicorp/cloudinit"
       version = "~>2.3"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~>3.6"
     }
   }
 }
@@ -28,29 +24,33 @@ provider "azurerm" {
   }
 }
 
-# State output from the 'prereqs' upstream module. Configure as appropriate for your state storage backend.
-data "terraform_remote_state" "prereqs" {
-  backend = "local"
+module "servers" {
+  source = "github.com/hashicorp/terraform-azurerm-consul-enterprise-hvd?ref=init"
 
-  config = {
-    path = "../prereqs/terraform.tfstate"
+  region                 = var.region
+  availability_zones     = var.availability_zones
+  subnet_id              = var.subnet_id
+  environment_name       = var.environment_name
+  consul_nodes           = var.consul_nodes
+  consul_install_version = var.consul_install_version
+  ssh_username           = var.ssh_username
+  ssh_public_key         = var.ssh_public_key
+
+  consul_secrets = {
+    kind = "azure-keyvault"
+    azure_keyvault = {
+      id = var.azure_keyvault_id
+    }
   }
-}
 
-module "default" {
-  source = "../.."
+  consul_agent = {
+    bootstrap_acls = true
+    datacenter     = var.consul_datacenter
+  }
 
-  region             = var.region
-  availability_zones = var.availability_zones
-  subnet_id          = var.subnet_id
-  environment_name   = var.environment_name
-  consul_nodes       = var.consul_nodes # 3 Availability Zones * 2 nodes per zone
-
-  ssh_public_key = var.ssh_public_key
-
-  consul_secrets = var.consul_secrets
-
-  consul_agent = var.consul_agent
-
-  snapshot_agent = var.snapshot_agent
+  snapshot_agent = {
+    enabled               = true
+    storage_account_name  = var.storage_account_name
+    object_container_name = var.object_container_name
+  }
 }

@@ -41,18 +41,21 @@ variable "availability_zones" {
 #------------------------------------------------------------------------------
 # Consul
 #------------------------------------------------------------------------------
+variable "consul_install_version" {
+  type        = string
+  description = "Version of Consul to install, eg. '1.19.2+ent'"
+  default     = "1.19.2+ent"
+  # validation {
+  #   condition     = can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+\\+ent$", var.consul_install_version))
+  #   error_message = "consul_agent.version must be an Enterprise release in the format #.#.#+ent"
+  # }
+}
 variable "consul_agent" {
   type = object({
     bootstrap_acls = optional(bool, true)
     datacenter     = optional(string, "dc1")
-    version        = string
   })
   description = "Object containing the Consul Agent configuration."
-
-  validation {
-    condition     = can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+\\+ent$", var.consul_agent.version))
-    error_message = "consul_agent.version must be an Enterprise release in the format #.#.#+ent"
-  }
 
 }
 

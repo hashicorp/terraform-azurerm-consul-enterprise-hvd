@@ -1,6 +1,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
-resource "azurerm_linux_virtual_machine_scale_set" "agents" {
+resource "azurerm_linux_virtual_machine_scale_set" "consul" {
   name                = local.vmss_name
   location            = local.resource_group_location
   resource_group_name = local.resource_group_name
@@ -71,5 +71,5 @@ resource "azurerm_linux_virtual_machine_scale_set" "agents" {
 
 locals {
   # avoid dep cycle between the VMSS and script template while staying DRY
-  vmss_name = "${var.environment_name}-agents"
+  vmss_name = "${var.environment_name}-consul-agents"
 }

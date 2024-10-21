@@ -1,10 +1,22 @@
 # Ubuntu | internal network load balancer (NLB) | Consul Enterprise primary
 
-Default Primary deployment of a Consul enterprise cluster on Ubuntu.
+This example deploys Consul Enterprise aligned with HashiCorp Validated Design. This is the minimum configuration required to standup a highly-available Consul Enterprise cluster with:
 
-- 6 node cluster
-- 3 availability zones
-- snapshot agent
+* 3 redundancy zones each with one voter and one non-voter node
+* Cloud auto-join for peer discovery
+* End-to-end TLS
+
+## Usage
+
+To run this example, you need to execute:
+
+```bash
+$ terraform init
+$ cp terraform.tfvars.example terraform.tfvars
+# Update variable values
+$ terraform plan
+$ terraform apply
+```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
