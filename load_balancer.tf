@@ -2,20 +2,21 @@
 # SPDX-License-Identifier: MPL-2.0
 
 resource "azurerm_public_ip" "consul_lb" {
-  count = var.load_balancer_internal ? 0 : 1
+  count = var.create_lb == true && var.load_balancer_internal ? 0 : 1
 
   name                = "${var.environment_name}-lb"
   location            = var.region
   zones               = var.availability_zones
   sku                 = "Standard"
-  resource_group_name = azurerm_resource_group.consul.name
+  resource_group_name = local.resource_group_name
   allocation_method   = "Static"
 }
 
 resource "azurerm_lb" "consul" {
+  count               = var.create_lb == true ? 0 : 1
   name                = "${var.environment_name}-consul"
   location            = var.region
-  resource_group_name = azurerm_resource_group.consul.name
+  resource_group_name = local.resource_group_name
   sku                 = "Standard"
 
   dynamic "frontend_ip_configuration" {
@@ -39,12 +40,12 @@ resource "azurerm_lb" "consul" {
 
 resource "azurerm_lb_backend_address_pool" "consul_servers" {
   name            = "${var.environment_name}-consul-servers"
-  loadbalancer_id = azurerm_lb.consul.id
+  loadbalancer_id = azurerm_lb.consul[0].id
 }
 
 resource "azurerm_lb_probe" "consul_health" {
   name                = "${var.environment_name}-consul-probe"
-  loadbalancer_id     = azurerm_lb.consul.id
+  loadbalancer_id     = azurerm_lb.consul[0].id
   protocol            = "Https"
   port                = 8501
   request_path        = "/v1/status/leader"
@@ -54,8 +55,8 @@ resource "azurerm_lb_probe" "consul_health" {
 
 resource "azurerm_lb_rule" "consul_tcp" {
   name                           = "${var.environment_name}-consul-tcp"
-  loadbalancer_id                = azurerm_lb.consul.id
-  frontend_ip_configuration_name = azurerm_lb.consul.frontend_ip_configuration[0].name
+  loadbalancer_id                = azurerm_lb.consul[0].id
+  frontend_ip_configuration_name = azurerm_lb.consul[0].frontend_ip_configuration[0].name
   protocol                       = "Tcp"
   frontend_port                  = 8501
   backend_port                   = 8501

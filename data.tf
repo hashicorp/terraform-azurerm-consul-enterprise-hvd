@@ -57,7 +57,7 @@ locals {
   config_vars = {
     consul_datacenter = var.consul_agent.datacenter
     subscription_id   = data.azurerm_client_config.current.subscription_id
-    resource_group    = azurerm_resource_group.consul.name
+    resource_group    = local.resource_group_name
     vm_scale_set      = local.vmss_name
     node_count        = var.consul_nodes
   }

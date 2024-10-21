@@ -1,15 +1,9 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
-
-resource "azurerm_resource_group" "consul" {
-  name     = format("rg-consul-%s-%s", lower(var.environment_name), lower(var.consul_agent.datacenter))
-  location = var.region
-}
-
 resource "azurerm_linux_virtual_machine_scale_set" "agents" {
   name                = local.vmss_name
-  location            = azurerm_resource_group.consul.location
-  resource_group_name = azurerm_resource_group.consul.name
+  location            = local.resource_group_location
+  resource_group_name = local.resource_group_name
 
   instances     = var.consul_nodes
   sku           = var.consul_vm_size
