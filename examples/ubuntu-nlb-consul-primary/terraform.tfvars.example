@@ -1,22 +1,30 @@
-
 #------------------------------------------------------------------------------
 # Common
 #------------------------------------------------------------------------------
-environment_name   = "<test>"
-region             = "<eastus>"
-availability_zones = ["1", "2", "3"]
-consul_datacenter  = "<dc1>"
-consul_version     = "1.19.2+ent"
+environment_name       = "<production>"
+region                 = "<eastus>"
+availability_zones     = ["1", "2", "3"]
+consul_fqdn            = "<consul>"
+consul_install_version = "1.20.0+ent"
+consul_agent = {
+  consul_datacenter = "<dc1>"
+}
 
 #------------------------------------------------------------------------------
 # Networking
 #------------------------------------------------------------------------------
+vnet_id   = "</subscriptions/12345678-3210-abcd-01ef-abcd5678cdef4321/resourceGroups/my-rg-name/providers/Microsoft.Network/virtualNetworks/my-vnet-name>"
 subnet_id = "</subscriptions/12345678-3210-abcd-01ef-abcd5678cdef4321/resourceGroups/my-rg-name/providers/Microsoft.Network/virtualNetworks/my-vnet-name/subnets/vault-subnet-name>"
 
 #------------------------------------------------------------------------------
 # Azure Key Vault installation secrets
 #------------------------------------------------------------------------------
-azure_keyvault_id = "</subscriptions/12345678-3210-abcd-01ef-abcd5678cdef4321/resourceGroups/my-rg-name/providers/Microsoft.KeyVault/vaults/example-kv>"
+consul_secrets = {
+  kind = "azure-keyvault"
+  azure_keyvault = {
+    id = "</subscriptions/12345678-3210-abcd-01ef-abcd5678cdef4321/resourceGroups/my-rg-name/providers/Microsoft.KeyVault/vaults/example-kv>"
+  }
+}
 
 #------------------------------------------------------------------------------
 # Compute
@@ -28,5 +36,8 @@ ssh_public_key = "<ssh-rsa AAAA..>"
 #------------------------------------------------------------------------------
 # Snapshots
 #------------------------------------------------------------------------------
-storage_account_name  = "<consul>"
-object_container_name = "<dc1-snapshots>"
+snapshot_agent = {
+  enabled               = true
+  storage_account_name  = "<consul>"
+  object_container_name = "<dc1-snapshots>"
+}

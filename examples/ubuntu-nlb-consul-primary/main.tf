@@ -29,28 +29,16 @@ module "default" {
 
   region                 = var.region
   availability_zones     = var.availability_zones
+  vnet_id                = var.vnet_id
   subnet_id              = var.subnet_id
   environment_name       = var.environment_name
+  consul_fqdn            = var.consul_fqdn
   consul_nodes           = var.consul_nodes
   consul_install_version = var.consul_install_version
   ssh_username           = var.ssh_username
   ssh_public_key         = var.ssh_public_key
 
-  consul_secrets = {
-    kind = "azure-keyvault"
-    azure_keyvault = {
-      id = var.azure_keyvault_id
-    }
-  }
-
-  consul_agent = {
-    bootstrap_acls = true
-    datacenter     = var.consul_datacenter
-  }
-
-  snapshot_agent = {
-    enabled               = true
-    storage_account_name  = var.storage_account_name
-    object_container_name = var.object_container_name
-  }
+  consul_secrets = var.consul_secrets
+  consul_agent   = var.consul_agent
+  snapshot_agent = var.snapshot_agent
 }

@@ -50,13 +50,13 @@ variable "consul_install_version" {
   #   error_message = "consul_agent.version must be an Enterprise release in the format #.#.#+ent"
   # }
 }
+
 variable "consul_agent" {
   type = object({
     bootstrap_acls = optional(bool, true)
     datacenter     = optional(string, "dc1")
   })
   description = "Object containing the Consul Agent configuration."
-
 }
 
 variable "snapshot_agent" {
@@ -97,16 +97,16 @@ variable "consul_secrets" {
       id = optional(string)
     }), {})
   })
-  description = "Object containing the Azure Key consul secrets necessary to inject Consul Agent TLS, Gossip encryption material, and ACL tokens."
+  description = "Object containing the Azure Key Vault secrets necessary to inject Consul Agent TLS, Gossip encryption material, and ACL tokens."
 
   validation {
-    condition     = contains(["azure-keyconsul"], var.consul_secrets.kind)
-    error_message = "Kind must be 'azure-keyconsul'."
+    condition     = contains(["azure-keyvault"], var.consul_secrets.kind)
+    error_message = "Kind must be 'azure-keyvault'."
   }
 
   validation {
-    condition     = var.consul_secrets.kind == "azure-keyconsul" ? var.consul_secrets.azure_keyconsul.id != null : true
-    error_message = "No 'consul_secrets.azure_keyconsul.id' provided."
+    condition     = var.consul_secrets.kind == "azure-keyvault" ? var.consul_secrets.azure_keyvault.id != null : true
+    error_message = "No 'consul_secrets.azure_keyvault.id' provided."
   }
 }
 
@@ -177,7 +177,7 @@ variable "image_reference" {
 #------------------------------------------------------------------------------
 variable "vnet_id" {
   type        = string
-  description = "VNet ID where Vault resources will reside."
+  description = "VNet ID where Consul resources will reside."
 }
 variable "create_lb" {
   type        = bool
