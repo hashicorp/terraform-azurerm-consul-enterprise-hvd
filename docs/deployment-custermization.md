@@ -71,7 +71,26 @@ variable "image_reference" {
 
 ### Template customization
 
-The consul templates are exposed as a variable that accepts a bas64 encoded value of the cloud_init config.
+The `consul_server.hcl.tpl` file is exposed as a variable
+
+```hcl
+variable "consul_config_template" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "(Optional string) name of `*.tpl` file in the `./templates` folder local to the module declaration, to replace the root `server.hcl.tpl` "
+  validation {
+    condition     = var.consul_config_template == null || can(fileexists("./templates/${var.consul_config_template}"))
+    error_message = "File `.templates/${var.consul_config_template}` not found or not readable"
+  }
+}
+```
+
+you can copy the existing template form the module to your root module `./templates` folder and provide the files basename i.e `consul_config_template = server.hcl.tpl` and the file will replace the default server config.
+
+####
+
+The full cloud_init template is exposed as a variable that accepts a bas64 encoded value of the cloud_init config.
 
 ```hcl
 variable "cloud_init_config_rendered" {
@@ -85,7 +104,22 @@ variable "cloud_init_config_rendered" {
 
 A way to create this is to copy the `data.tf` file and `./templates` folder from the module to the example or your declarative root module.
 This will respect all your declared variables and allow you to update the template you intend to extend as needed.
-it will also allow you to call `cloud_init_config_rendered=data.cloud_init.consul.rendered` in your main.tf to assign the value to the module decleration.
+You will need to update the locals as follows
+
+```hcl
+  config_vars = {
+    consul_datacenter = var.consul_agent.datacenter
+    subscription_id   = data.azurerm_client_config.current.subscription_id
+    # resource_group    = local.resource_group_name
+    # vm_scale_set      = local.vmss_name
+    resource_group    = var.resource_group_name
+     vm_scale_set      = "${var.environment_name}-consul-agents"
+    node_count        = var.consul_nodes
+  }
+```
+
+It will also allow you to call `cloud_init_config_rendered=data.cloud_init.consul.rendered` in your main.tf to assign the value to the module declaration.
+
 
 ```pre
 # example of what your module would look like

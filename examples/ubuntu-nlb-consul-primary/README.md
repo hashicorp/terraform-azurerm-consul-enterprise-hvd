@@ -46,8 +46,9 @@ $ terraform apply
 | <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key) | (Required string) SSH public key to use when authenticating to VM instances. | `string` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | (required string) The ID of the subnet in which resources should be deployed. | `string` | n/a | yes |
 | <a name="input_vnet_id"></a> [vnet\_id](#input\_vnet\_id) | (Required string) VNet ID where Consul resources will reside. | `string` | n/a | yes |
-| <a name="input_cloud_init_config_rendered"></a> [cloud\_init\_config\_rendered](#input\_cloud\_init\_config\_rendered) | (Optional base64 string) To override the `azurerm_linux_virtual_machine_scale_set.consul.custom_data` provide a base64 rendered value from the `data.cloud_init` | `string` | `null` | no |
+| <a name="input_cloud_init_config_rendered"></a> [cloud\_init\_config\_rendered](#input\_cloud\_init\_config\_rendered) | (Optional base64 string) To override the `azurerm_linux_virtual_machine_scale_set.consul.custom_data` provide a base64gzip rendered value from the `data.cloud_init` | `string` | `null` | no |
 | <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | (Optional map) Map of common tags for taggable Azure resources. | `map(string)` | `{}` | no |
+| <a name="input_consul_config_template"></a> [consul\_config\_template](#input\_consul\_config\_template) | (Optional string) name of `*.tpl` file in the `./templates` folder local to the module decleration, to replace the root `server.hcl.tpl` | `string` | `null` | no |
 | <a name="input_consul_install_version"></a> [consul\_install\_version](#input\_consul\_install\_version) | (Optional string) Version of Consul to install, eg. '1.19.2+ent' | `string` | `"1.19.2+ent"` | no |
 | <a name="input_consul_nodes"></a> [consul\_nodes](#input\_consul\_nodes) | (Optional number) Number of Consul instances. | `number` | `6` | no |
 | <a name="input_consul_vm_size"></a> [consul\_vm\_size](#input\_consul\_vm\_size) | (Optional string) The size of VM instance to use for Consul agents. | `string` | `"Standard_D2s_v3"` | no |

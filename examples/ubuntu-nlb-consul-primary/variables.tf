@@ -117,10 +117,20 @@ variable "cloud_init_config_rendered" {
   type        = string
   nullable    = true
   default     = null
-  description = "(Optional base64 string) To override the `azurerm_linux_virtual_machine_scale_set.consul.custom_data` provide a base64 rendered value from the `data.cloud_init` "
+  description = "(Optional base64 string) To override the `azurerm_linux_virtual_machine_scale_set.consul.custom_data` provide a base64gzip rendered value from the `data.cloud_init` "
+  # validation {
+  #   error_message = "String must be base64value"
+  #   condition     = var.cloud_init_config_rendered == null || can(base64decode(var.cloud_init_config_rendered))
+  # }
+}
+variable "consul_config_template" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "(Optional string) name of `*.tpl` file in the `./templates` folder local to the module decleration, to replace the root `server.hcl.tpl` "
   validation {
-    error_message = "String must be base64value"
-    condition     = var.cloud_init_config_rendered != null && can(base64decode(var.cloud_init_config_rendered))
+    condition     = var.consul_config_template == null || can(fileexists("./templates/${var.consul_config_template}"))
+    error_message = "File `.templates/${var.consul_config_template}` not found or not readable"
   }
 }
 variable "consul_vm_size" {

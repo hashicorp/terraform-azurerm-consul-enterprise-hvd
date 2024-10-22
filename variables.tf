@@ -123,6 +123,16 @@ variable "cloud_init_config_rendered" {
   #   condition     = var.cloud_init_config_rendered == null || can(base64decode(var.cloud_init_config_rendered))
   # }
 }
+variable "consul_config_template" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "(Optional string) name of `*.tpl` file in the `./templates` folder local to the module decleration, to replace the root `server.hcl.tpl` "
+  validation {
+    condition     = var.consul_config_template == null || can(fileexists("./templates/${var.consul_config_template}"))
+    error_message = "File `.templates/${var.consul_config_template}` not found or not readable"
+  }
+}
 variable "consul_vm_size" {
   type        = string
   description = "(Optional string) The size of VM instance to use for Consul agents."
