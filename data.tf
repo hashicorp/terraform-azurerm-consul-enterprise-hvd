@@ -48,7 +48,7 @@ data "cloudinit_config" "consul" {
 locals {
   consul_config_templatefile = var.consul_config_template != null ? "${path.cwd}/templates/${var.consul_config_template}" : "${path.module}/templates/server.hcl.tpl"
 
-  consul_config_template = templatefile(local.consul_config_template, local.config_vars)
+  consul_config_template = templatefile(local.consul_config_templatefile, local.config_vars)
   install_vars = {
     consul_version = var.consul_install_version
     consul_agent   = var.consul_agent
