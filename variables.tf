@@ -129,8 +129,8 @@ variable "consul_config_template" {
   nullable    = true
   description = "(Optional string) name of `*.tpl` file in the `./templates` folder local to the module decleration, to replace the root `server.hcl.tpl` "
   validation {
-    condition     = var.consul_config_template == null || can(fileexists("./templates/${var.consul_config_template}"))
-    error_message = "File `.templates/${var.consul_config_template}` not found or not readable"
+    condition     = var.consul_config_template == null || can(fileexists("${path.cwd}/${var.consul_config_template}"))
+    error_message = "File `${path.cwd}/${var.consul_config_template}` not found or not readable"
   }
 }
 variable "consul_vm_size" {
