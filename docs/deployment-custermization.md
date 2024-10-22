@@ -69,5 +69,48 @@ variable "image_reference" {
 }
 ```
 
+### Template customization
 
+The consul templates are exposed as a variable that accepts a bas64 encoded value of the cloud_init config.
 
+```hcl
+variable "cloud_init_config_rendered" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "(Optional string) To override the `azurerm_linux_virtual_machine_scale_set.consul.custom_data` provide a rendered value from the `data.cloud_init` "
+}
+
+```
+
+A way to create this is to copy the `data.tf` file and `./templates` folder from the module to the example or your declarative root module.
+This will respect all your declared variables and allow you to update the template you intend to extend as needed.
+it will also allow you to call `cloud_init_config_rendered=data.cloud_init.consul.rendered` in your main.tf to assign the value to the module decleration.
+
+```pre
+# example of what your module would look like
+$ tree ./
+├── data.tf # copied from module
+├── main.tf
+├── terraform.tfvars.example
+├── README.md
+├── templates # copied from module
+│   ├── 00_init.yaml
+│   ├── install_consul.sh.tpl
+│   ├── install_consul_bootstrap_keyvault.sh.tpl
+│   ├── install_consul_config.sh.tpl
+│   ├── install_consul_secrets.sh.tpl
+│   ├── install_snapshot_agent.sh.tpl
+│   ├── install_systemd_config.sh.tpl
+│   └── server.hcl.tpl
+└── variables.tf
+
+```
+
+```hcl
+module "default" {
+  source = "github.com/hashicorp/terraform-azurerm-consul-enterprise-hvd?ref=init"
+...
+cloud_init_config_rendered = data.cloud_init.consul.rendered
+...
+```

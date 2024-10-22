@@ -1,5 +1,9 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
+
+locals {
+  cloudinit_config_rendered = var.cloud_init_config_rendered == null ? data.cloudinit_config.consul.rendered : var.cloud_init_config_rendered
+}
 resource "azurerm_linux_virtual_machine_scale_set" "consul" {
   name                = local.vmss_name
   location            = local.resource_group_location
@@ -27,7 +31,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "consul" {
     version   = var.image_reference.version
   }
 
-  custom_data = data.cloudinit_config.consul.rendered
+  custom_data = local.cloudinit_config_rendered
   os_disk {
     caching                   = "ReadWrite"
     storage_account_type      = var.disk_params.root.disk_type

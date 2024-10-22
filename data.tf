@@ -61,4 +61,5 @@ locals {
     vm_scale_set      = local.vmss_name
     node_count        = var.consul_nodes
   }
+
 }

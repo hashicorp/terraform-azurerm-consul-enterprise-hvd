@@ -3,19 +3,19 @@
 #------------------------------------------------------------------------------
 variable "resource_group_name" {
   type        = string
-  description = "Name of Resource Group to use for Consul cluster resources"
+  description = "(Optional string) Name of Resource Group to use for Consul cluster resources"
   default     = "consul-ent-rg"
 }
 
 variable "create_resource_group" {
   type        = bool
-  description = "Boolean to create a new Resource Group for this consul deployment."
+  description = "(Optional bool) Boolean to create a new Resource Group for this consul deployment."
   default     = true
 }
 
 variable "region" {
   type        = string
-  description = "Azure region for this consul deployment."
+  description = "(required string) Azure region for this consul deployment."
 
   validation {
     condition     = contains(["eastus", "westus", "centralus", "eastus2", "westus2", "westus3", "westeurope", "northeurope", "southeastasia", "eastasia", "australiaeast", "australiasoutheast", "uksouth", "ukwest", "canadacentral", "canadaeast", "southindia", "centralindia", "westindia", "japaneast", "japanwest", "koreacentral", "koreasouth", "francecentral", "southafricanorth", "uaenorth", "brazilsouth", "switzerlandnorth", "germanywestcentral", "norwayeast", "westcentralus"], var.region)
@@ -25,17 +25,17 @@ variable "region" {
 
 variable "environment_name" {
   type        = string
-  description = "Unique environment name to prefix and disambiguate resources using."
+  description = "(required string) Unique environment name to prefix and disambiguate resources using."
 }
 variable "common_tags" {
   type        = map(string)
-  description = "Map of common tags for taggable Azure resources."
+  description = "(Optional map) Map of common tags for taggable Azure resources."
   default     = {}
 }
 
 variable "availability_zones" {
   type        = list(string)
-  description = "List of availability zones to deploy supported resources to. Only works in select regions."
+  description = "(Required List(string)) List of availability zones to deploy supported resources to. Only works in select regions."
 }
 
 #------------------------------------------------------------------------------
@@ -43,12 +43,12 @@ variable "availability_zones" {
 #------------------------------------------------------------------------------
 variable "consul_install_version" {
   type        = string
-  description = "Version of Consul to install, eg. '1.19.2+ent'"
+  description = "(Optional string) Version of Consul to install, eg. '1.19.2+ent'"
   default     = "1.19.2+ent"
-  # validation {
-  #   condition     = can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+\\+ent$", var.consul_install_version))
-  #   error_message = "consul_agent.version must be an Enterprise release in the format #.#.#+ent"
-  # }
+  validation {
+    condition     = can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+\\+ent$|^[0-9]+\\.[0-9]+\\.[0-9]+\\+ent.fips1402$", var.consul_install_version))
+    error_message = "consul_agent.version must be an Enterprise release in the format #.#.#+ent"
+  }
 }
 
 variable "consul_agent" {
@@ -86,7 +86,7 @@ variable "snapshot_agent" {
 
 variable "consul_nodes" {
   type        = number
-  description = "Number of Consul instances."
+  description = "(Optional number) Number of Consul instances."
   default     = 6
 }
 
@@ -113,10 +113,19 @@ variable "consul_secrets" {
 #------------------------------------------------------------------------------
 # Compute
 #------------------------------------------------------------------------------
-
+variable "cloud_init_config_rendered" {
+  type        = string
+  nullable    = true
+  default     = null
+  description = "(Optional base64 string) To override the `azurerm_linux_virtual_machine_scale_set.consul.custom_data` provide a base64 rendered value from the `data.cloud_init` "
+  validation {
+    error_message = "String must be base64value"
+    condition     = var.cloud_init_config_rendered == null || can(base64decode(var.cloud_init_config_rendered))
+  }
+}
 variable "consul_vm_size" {
   type        = string
-  description = "The size of VM instance to use for Consul agents."
+  description = "(Optional string) The size of VM instance to use for Consul agents."
   default     = "Standard_D2s_v3"
 }
 
@@ -140,18 +149,18 @@ variable "disk_params" {
 
 variable "ssh_username" {
   type        = string
-  description = "Default username to add to VMSS instances."
+  description = "(Optional string) Default username to add to VMSS instances."
   default     = "azureuser"
 }
 
 variable "ssh_public_key" {
   type        = string
-  description = "SSH public key to use when authenticating to VM instances."
+  description = "(Required string) SSH public key to use when authenticating to VM instances."
 }
 
 variable "storage_account_type" {
   type        = string
-  description = "Redundancy type for the Consul Snapshot storage account. Must be one of LRS, GRS, or RAGRS."
+  description = "(Optional string) Redundancy type for the Consul Snapshot storage account. Must be one of LRS, GRS, or RAGRS."
   default     = "GRS"
 }
 
@@ -177,22 +186,22 @@ variable "image_reference" {
 #------------------------------------------------------------------------------
 variable "vnet_id" {
   type        = string
-  description = "VNet ID where Consul resources will reside."
+  description = "(Required string) VNet ID where Consul resources will reside."
 }
 variable "create_lb" {
   type        = bool
-  description = "Boolean to create an Azure Load Balancer for Consul."
+  description = "(Optional bool) Boolean to create an Azure Load Balancer for Consul."
   default     = true
 }
 variable "load_balancer_internal" {
   type        = bool
-  description = "Whether the provisioned load balancer should be internal-facing or internet-facing. If internal facing, ensure NAT Gateway or another internet egress method has been configured in your vnet."
+  description = "(Optional bool) Whether the provisioned load balancer should be internal-facing or internet-facing. If internal facing, ensure NAT Gateway or another internet egress method has been configured in your vnet."
   default     = false
 }
 
 variable "subnet_id" {
   type        = string
-  description = "The ID of the subnet in which resources should be deployed."
+  description = "(required string) The ID of the subnet in which resources should be deployed."
 }
 
 #------------------------------------------------------------------------------
@@ -201,41 +210,41 @@ variable "subnet_id" {
 
 variable "consul_fqdn" {
   type        = string
-  description = "Fully qualified domain name of the consul cluster. This name __must__ match a SAN entry in the TLS server certificate."
+  description = "(required string) Fully qualified domain name of the consul cluster. This name __must__ match a SAN entry in the TLS server certificate."
 }
 variable "create_consul_public_dns_record" {
   type        = bool
-  description = "Boolean to create a DNS record for consul in a public Azure DNS zone. `public_dns_zone_name` must also be provided when `true`."
+  description = "(Optional bool) Boolean to create a DNS record for consul in a public Azure DNS zone. `public_dns_zone_name` must also be provided when `true`."
   default     = false
 }
 
 variable "create_consul_private_dns_record" {
   type        = bool
-  description = "Boolean to create a DNS record for consul in a private Azure DNS zone. `private_dns_zone_name` must also be provided when `true`."
+  description = "(Optional bool) Boolean to create a DNS record for consul in a private Azure DNS zone. `private_dns_zone_name` must also be provided when `true`."
   default     = false
 }
 
 variable "public_dns_zone_name" {
   type        = string
-  description = "Name of existing public Azure DNS zone to create DNS record in. Required when `create_consul_public_dns_record` is `true`."
+  description = "(Optional string) Name of existing public Azure DNS zone to create DNS record in. Required when `create_consul_public_dns_record` is `true`."
   default     = null
 }
 
 variable "public_dns_zone_rg" {
   type        = string
-  description = "Name of Resource Group where `public_dns_zone_name` resides. Required when `create_consul_public_dns_record` is `true`."
+  description = "(Optional string) Name of Resource Group where `public_dns_zone_name` resides. Required when `create_consul_public_dns_record` is `true`."
   default     = null
 }
 
 variable "private_dns_zone_name" {
   type        = string
-  description = "Name of existing private Azure DNS zone to create DNS record in. Required when `create_consul_private_dns_record` is `true`."
+  description = "(Optional string) Name of existing private Azure DNS zone to create DNS record in. Required when `create_consul_private_dns_record` is `true`."
   default     = null
 }
 
 variable "private_dns_zone_rg" {
   type        = string
-  description = "Name of Resource Group where `private_dns_zone_name` resides. Required when `create_consul_private_dns_record` is `true`."
+  description = "(Optional string) Name of Resource Group where `private_dns_zone_name` resides. Required when `create_consul_private_dns_record` is `true`."
   default     = null
 }
 
