@@ -10,6 +10,10 @@ resource "azurerm_public_ip" "consul_lb" {
   sku                 = "Standard"
   resource_group_name = local.resource_group_name
   allocation_method   = "Static"
+  tags = merge(
+    { "Name" = "${var.environment_name}-consul-lb" },
+    var.common_tags
+  )
 }
 
 resource "azurerm_lb" "consul" {

@@ -3,12 +3,17 @@
 
 locals {
   cloudinit_config_rendered = var.cloud_init_config_rendered == null ? data.cloudinit_config.consul.rendered : var.cloud_init_config_rendered
+  # avoiddep cycle between the VMSS and script template while staying DRY
+  vmss_name = "${var.environment_name}-consul-agents"
 }
 resource "azurerm_linux_virtual_machine_scale_set" "consul" {
   name                = local.vmss_name
   location            = local.resource_group_location
   resource_group_name = local.resource_group_name
-
+  tags = merge(
+    { "Name" = "${local.vmss_name}" },
+    var.common_tags
+  )
   instances     = var.consul_nodes
   sku           = var.consul_vm_size
   overprovision = false
@@ -73,7 +78,4 @@ resource "azurerm_linux_virtual_machine_scale_set" "consul" {
   depends_on = [azurerm_role_assignment.consul_reader]
 }
 
-locals {
-  # avoid dep cycle between the VMSS and script template while staying DRY
-  vmss_name = "${var.environment_name}-consul-agents"
-}
+
