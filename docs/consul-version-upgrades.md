@@ -30,7 +30,6 @@ The `module.<name>.azurerm_linux_virtual_machine_scale_set.consul` resource supp
 
 resource "azurerm_linux_virtual_machine_scale_set" "consul" {
 ...
-  # Don't grab latest template if re-launching failed instances
   overprovision = false
   upgrade_mode  = "Manual"
  ...
