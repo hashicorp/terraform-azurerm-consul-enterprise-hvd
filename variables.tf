@@ -120,7 +120,7 @@ variable "cloud_init_config_rendered" {
   description = "(Optional base64 string) To override the `azurerm_linux_virtual_machine_scale_set.consul.custom_data` provide a base64 rendered value from the `data.cloud_init` "
   validation {
     error_message = "String must be base64value"
-    condition     = var.cloud_init_config_rendered == null || can(base64decode(var.cloud_init_config_rendered))
+    condition     = var.cloud_init_config_rendered != null && can(base64decode(var.cloud_init_config_rendered))
   }
 }
 variable "consul_vm_size" {
