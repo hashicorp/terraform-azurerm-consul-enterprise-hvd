@@ -47,7 +47,7 @@ data "cloudinit_config" "consul" {
 
 locals {
   install_vars = {
-    consul_version = var.consul_agent.version
+    consul_version = var.consul_install_version
     consul_agent   = var.consul_agent
     consul_config  = templatefile("${path.module}/templates/server.hcl.tpl", local.config_vars)
     consul_secrets = var.consul_secrets

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 resource "azurerm_public_ip" "consul_lb" {
-  count = var.create_lb == true && var.load_balancer_internal ? 0 : 1
+  count = var.create_lb == true && var.load_balancer_internal == false ? 1 : 0
 
   name                = "${var.environment_name}-lb"
   location            = var.region
@@ -13,7 +13,7 @@ resource "azurerm_public_ip" "consul_lb" {
 }
 
 resource "azurerm_lb" "consul" {
-  count               = var.create_lb == true ? 0 : 1
+  count               = var.create_lb == true ? 1 : 0
   name                = "${var.environment_name}-consul"
   location            = var.region
   resource_group_name = local.resource_group_name
@@ -39,11 +39,13 @@ resource "azurerm_lb" "consul" {
 }
 
 resource "azurerm_lb_backend_address_pool" "consul_servers" {
+  count           = var.create_lb == true ? 1 : 0
   name            = "${var.environment_name}-consul-servers"
   loadbalancer_id = azurerm_lb.consul[0].id
 }
 
 resource "azurerm_lb_probe" "consul_health" {
+  count               = var.create_lb == true ? 1 : 0
   name                = "${var.environment_name}-consul-probe"
   loadbalancer_id     = azurerm_lb.consul[0].id
   protocol            = "Https"
@@ -54,12 +56,13 @@ resource "azurerm_lb_probe" "consul_health" {
 }
 
 resource "azurerm_lb_rule" "consul_tcp" {
+  count                          = var.create_lb == true ? 1 : 0
   name                           = "${var.environment_name}-consul-tcp"
   loadbalancer_id                = azurerm_lb.consul[0].id
   frontend_ip_configuration_name = azurerm_lb.consul[0].frontend_ip_configuration[0].name
   protocol                       = "Tcp"
   frontend_port                  = 8501
   backend_port                   = 8501
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.consul_servers.id]
-  probe_id                       = azurerm_lb_probe.consul_health.id
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.consul_servers[0].id]
+  probe_id                       = azurerm_lb_probe.consul_health[0].id
 }
