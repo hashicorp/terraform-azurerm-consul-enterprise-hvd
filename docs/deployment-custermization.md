@@ -81,14 +81,14 @@ variable "consul_config_template" {
   description = "(Optional string) name of `*.tpl` file in the `./templates` folder local to the module declaration, to replace the root `server.hcl.tpl` "
   validation {
     condition     = var.consul_config_template == null || can(fileexists("./templates/${var.consul_config_template}"))
-    error_message = "File `.templates/${var.consul_config_template}` not found or not readable"
+    error_message = "File not found or not readable"
   }
 }
 ```
 
 you can copy the existing template form the module to your root module `./templates` folder and provide the files basename i.e `consul_config_template = server.hcl.tpl` and the file will replace the default server config.
 
-####
+#### Cloud_init template
 
 The full cloud_init template is exposed as a variable that accepts a bas64 encoded value of the cloud_init config.
 
