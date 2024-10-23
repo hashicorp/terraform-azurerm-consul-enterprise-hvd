@@ -18,7 +18,7 @@ data "cloudinit_config" "consul" {
 
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_consul_config.sh.tpl", local.install_vars)
+    content      = local.consul_config_template
   }
   part {
     content_type = "x-shellscript"
