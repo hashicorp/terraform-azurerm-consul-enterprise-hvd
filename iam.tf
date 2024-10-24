@@ -3,13 +3,13 @@
 
 resource "azurerm_user_assigned_identity" "consul_iam" {
   name                = var.environment_name
-  resource_group_name = azurerm_resource_group.consul.name
+  resource_group_name = local.resource_group_name
   location            = var.region
 }
 
 // All Agents
 resource "azurerm_role_assignment" "consul_reader" {
-  scope                = azurerm_resource_group.consul.id
+  scope                = local.resource_group_id
   role_definition_name = "Reader"
   principal_id         = azurerm_user_assigned_identity.consul_iam.principal_id
 }

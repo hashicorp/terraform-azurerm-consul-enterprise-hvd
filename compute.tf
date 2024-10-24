@@ -1,16 +1,19 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-resource "azurerm_resource_group" "consul" {
-  name     = format("rg-consul-%s-%s", lower(var.environment_name), lower(var.consul_agent.datacenter))
-  location = var.region
+locals {
+  cloudinit_config_rendered = var.cloud_init_config_rendered == null ? data.cloudinit_config.consul.rendered : var.cloud_init_config_rendered
+  # avoiddep cycle between the VMSS and script template while staying DRY
+  vmss_name = "${var.environment_name}-consul-agents"
 }
-
-resource "azurerm_linux_virtual_machine_scale_set" "agents" {
+resource "azurerm_linux_virtual_machine_scale_set" "consul" {
   name                = local.vmss_name
-  location            = azurerm_resource_group.consul.location
-  resource_group_name = azurerm_resource_group.consul.name
-
+  location            = local.resource_group_location
+  resource_group_name = local.resource_group_name
+  tags = merge(
+    { "Name" = "${local.vmss_name}" },
+    var.common_tags
+  )
   instances     = var.consul_nodes
   sku           = var.consul_vm_size
   overprovision = false
@@ -33,7 +36,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "agents" {
     version   = var.image_reference.version
   }
 
-  custom_data = data.cloudinit_config.consul.rendered
+  custom_data = local.cloudinit_config_rendered
   os_disk {
     caching                   = "ReadWrite"
     storage_account_type      = var.disk_params.root.disk_type
@@ -59,7 +62,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "agents" {
       primary                                = true
       subnet_id                              = var.subnet_id
       application_security_group_ids         = [azurerm_application_security_group.consul_agents.id]
-      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.consul_servers.id]
+      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.consul_servers[0].id]
     }
   }
 
@@ -75,7 +78,4 @@ resource "azurerm_linux_virtual_machine_scale_set" "agents" {
   depends_on = [azurerm_role_assignment.consul_reader]
 }
 
-locals {
-  # avoid dep cycle between the VMSS and script template while staying DRY
-  vmss_name = "${var.environment_name}-agents"
-}
+

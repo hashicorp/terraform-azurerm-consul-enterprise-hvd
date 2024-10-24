@@ -13,7 +13,7 @@ data "cloudinit_config" "consul" {
 
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_consul.sh.tpl", local.install_vars)
+    content      = templatefile("${path.module}/templates/install_consul.sh.tpl", { consul_version = var.consul_install_version })
   }
 
   part {
@@ -46,10 +46,13 @@ data "cloudinit_config" "consul" {
 }
 
 locals {
+  consul_config_templatefile = var.consul_config_template != null ? "${path.cwd}/templates/${var.consul_config_template}" : "${path.module}/templates/server.hcl.tpl"
+
+  consul_config_template = templatefile(local.consul_config_templatefile, local.config_vars)
   install_vars = {
-    consul_version = var.consul_agent.version
+    consul_version = var.consul_install_version
     consul_agent   = var.consul_agent
-    consul_config  = templatefile("${path.module}/templates/server.hcl.tpl", local.config_vars)
+    consul_config  = local.consul_config_template
     consul_secrets = var.consul_secrets
     snapshot_agent = var.snapshot_agent
   }
@@ -57,8 +60,9 @@ locals {
   config_vars = {
     consul_datacenter = var.consul_agent.datacenter
     subscription_id   = data.azurerm_client_config.current.subscription_id
-    resource_group    = azurerm_resource_group.consul.name
+    resource_group    = local.resource_group_name
     vm_scale_set      = local.vmss_name
     node_count        = var.consul_nodes
   }
+
 }
