@@ -118,7 +118,7 @@ You will need to update the locals as follows
   }
 ```
 
-It will also allow you to call `cloud_init_config_rendered=data.cloud_init.consul.rendered` in your main.tf to assign the value to the module declaration.
+It will also allow you to call `cloud_init_config_rendered = data.cloudinit_config.consul.rendered` in your main.tf to assign the value to the module declaration.
 
 
 ```pre
