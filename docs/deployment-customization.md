@@ -1,8 +1,8 @@
-# Deployment Customizations
+# Deployment customizations
 
 On this page are various deployment customizations and their corresponding input variables that you may set to meet your requirements.
 
-## Load Balancer
+## Load balancer
 
 This module defaults to creating a load balancer (`create_lb = true`) that is internal (`load_balancer_internal = true`).
 
@@ -46,12 +46,11 @@ public_dns_zone_name            = "<example.com>"
 public_dns_zone_rg              = "<my-public-dns-zone-resource-group-name>"
 ```
 
-## Custom VM Image
+## Custom VM image
 
 If a custom VM image is preferred over using a standard marketplace image, the following variable may be set:
 
 ```hcl
-
 variable "image_reference" {
   type = object({
     publisher = string,
@@ -71,7 +70,7 @@ variable "image_reference" {
 
 ### Template customization
 
-The `consul_server.hcl.tpl` file is exposed as a variable
+The `consul_server.hcl.tpl` file is exposed as a variable:
 
 ```hcl
 variable "consul_config_template" {
@@ -86,7 +85,7 @@ variable "consul_config_template" {
 }
 ```
 
-you can copy the existing template form the module to your root module `./templates` folder and provide the files basename i.e `consul_config_template = server.hcl.tpl` and the file will replace the default server config.
+You can copy the existing template from the module to your root module `./templates` folder and provide the files basename i.e `consul_config_template = server.hcl.tpl` and the file will replace the default server config.
 
 #### Cloud_init template
 
@@ -99,7 +98,6 @@ variable "cloud_init_config_rendered" {
   default     = null
   description = "(Optional string) To override the `azurerm_linux_virtual_machine_scale_set.consul.custom_data` provide a rendered value from the `data.cloud_init` "
 }
-
 ```
 
 A way to create this is to copy the `data.tf` file and `./templates` folder from the module to the example or your declarative root module.
@@ -120,7 +118,6 @@ You will need to update the locals as follows
 
 It will also allow you to call `cloud_init_config_rendered=data.cloud_init.consul.rendered` in your main.tf to assign the value to the module declaration.
 
-
 ```pre
 # example of what your module would look like
 $ tree ./
@@ -138,7 +135,6 @@ $ tree ./
 │   ├── install_systemd_config.sh.tpl
 │   └── server.hcl.tpl
 └── variables.tf
-
 ```
 
 ```hcl
