@@ -145,6 +145,6 @@ $ tree ./
 module "default" {
   source = "github.com/hashicorp/terraform-azurerm-consul-enterprise-hvd?ref=init"
 ...
-cloud_init_config_rendered = data.cloud_init.consul.rendered
+cloud_init_config_rendered = data.cloudinit_config.consul.rendered
 ...
 ```
