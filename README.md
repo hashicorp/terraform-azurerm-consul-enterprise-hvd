@@ -18,9 +18,7 @@ This module requires the following resources to already be deployed to an Azure 
 
 ## Examples
 
-The `examples/prereqs` directory contains a reference deployment of the aforementioned prerequisite resources.
-
-The `examples/consul` directory contains a reference root-level module which uses the `prereqs` state output to deploy this module.
+The `examples/ubuntu-nlb-consul-primary` directory contains a reference deployment of the aforementioned prerequisite resources.
 
 ## TLS
 
@@ -85,6 +83,17 @@ Upon deployment, the following packages are installed:
 ### VM image reference
 
 The VM Scale Set will attempt to use an Azure Platform Image for its base deployment. By default, this is configured to use Ubuntu 22.04 LTS. Alternative images may be provided by overriding the `image_reference` variable. See the [Azure Documentation](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage) for more information on discovering platform images.
+
+### Additional Usage
+
+Documentation on further customization and usage is found in the `./docs` folder.
+
+```pre
+
+./docs
+├── consul-version-upgrades.md
+└── deployment-customization.md
+```
 
 ## Module support
 
