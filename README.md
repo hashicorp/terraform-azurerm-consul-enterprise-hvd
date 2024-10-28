@@ -84,16 +84,9 @@ Upon deployment, the following packages are installed:
 
 The VM Scale Set will attempt to use an Azure Platform Image for its base deployment. By default, this is configured to use Ubuntu 22.04 LTS. Alternative images may be provided by overriding the `image_reference` variable. See the [Azure Documentation](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage) for more information on discovering platform images.
 
-### Additional Usage
+## Docs
 
-Documentation on further customization and usage is found in the `./docs` folder.
-
-```pre
-
-./docs
-├── consul-version-upgrades.md
-└── deployment-customization.md
-```
+Additional documentation for customization and usage can be found in the [docs](./docs/) folder.
 
 ## Module support
 
