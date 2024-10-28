@@ -86,7 +86,7 @@ The VM Scale Set will attempt to use an Azure Platform Image for its base deploy
 
 ## Docs
 
-Additional documentation for customization and usage can be found in the [docs](https://github.com/hashicorp/terraform-aws-consul-enterprise-hvd/blob/0.1.0/docs/) folder.
+Additional documentation for customization and usage can be found in the [docs](./docs/) folder.
 
 ## Module support
 
