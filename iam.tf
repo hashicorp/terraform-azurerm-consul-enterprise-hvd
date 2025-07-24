@@ -19,3 +19,13 @@ resource "azurerm_role_assignment" "consul_kvso" {
   role_definition_name = "Key Vault Secrets Officer"
   principal_id         = azurerm_user_assigned_identity.consul_iam.principal_id
 }
+
+resource "azurerm_key_vault_access_policy" "kv_reader" {
+  key_vault_id = var.consul_secrets.azure_keyvault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = azurerm_user_assigned_identity.consul_iam.principal_id
+
+  secret_permissions = [
+    "Get", "List", "Set"
+  ]
+}
