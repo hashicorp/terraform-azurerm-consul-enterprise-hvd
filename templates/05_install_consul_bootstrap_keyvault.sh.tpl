@@ -66,9 +66,9 @@ until curl --fail --silent --show-error --unix-socket /run/consul/consul.sock ht
   sleep 5
 done
 
-# 200 acls bootstrapped 
+# 200 acls bootstrapped
 # 403 acls previously bootstrapped
-export CONSUL_HTTP_ADDR=unix:///run/consul/consul.sock 
+export CONSUL_HTTP_ADDR=unix:///run/consul/consul.sock
 if RESPONSE="$(curl --fail --silent --show-error --request PUT --unix-socket /run/consul/consul.sock http://localhost/v1/acl/bootstrap)" ; then
   MGMT_TOKEN=$(echo "$${RESPONSE}" | jq -er .SecretID)
   az keyvault secret set --vault-name "$${KEYVAULT}" --name mgmt-token --value "$${MGMT_TOKEN}"
