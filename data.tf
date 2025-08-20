@@ -13,26 +13,26 @@ data "cloudinit_config" "consul" {
 
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_consul.sh.tpl", { consul_version = var.consul_install_version })
+    content      = templatefile("${path.module}/templates/01_install_consul.sh.tpl", { consul_version = var.consul_install_version })
   }
 
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_consul_config.sh.tpl", local.install_vars)
+    content      = templatefile("${path.module}/templates/02_install_consul_config.sh.tpl", local.install_vars)
   }
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_consul_secrets.sh.tpl", local.install_vars)
+    content      = templatefile("${path.module}/templates/03_install_consul_secrets.sh.tpl", local.install_vars)
   }
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_systemd_config.sh.tpl", local.install_vars)
+    content      = templatefile("${path.module}/templates/04_install_systemd_config.sh.tpl", local.install_vars)
   }
   dynamic "part" {
     for_each = var.consul_agent.bootstrap_acls ? [1] : []
     content {
       content_type = "x-shellscript"
-      content      = templatefile("${path.module}/templates/install_consul_bootstrap_keyvault.sh.tpl", local.install_vars)
+      content      = templatefile("${path.module}/templates/05_install_consul_bootstrap_keyvault.sh.tpl", local.install_vars)
     }
   }
 
