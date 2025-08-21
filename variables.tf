@@ -177,7 +177,33 @@ variable "storage_account_type" {
   default     = "GRS"
 }
 
+variable "vm_os_image" {
+  description = "The OS image to use for the VM. Options are: redhat8, redhat9, ubuntu2204, ubuntu2404."
+  type        = string
+  default     = "ubuntu2404"
 
+  validation {
+    condition     = contains(["redhat8", "redhat9", "ubuntu2204", "ubuntu2404"], var.vm_os_image)
+    error_message = "Value must be one of 'redhat8', 'redhat9', 'ubuntu2204', or 'ubuntu2404'."
+  }
+}
+
+variable "vm_custom_image_name" {
+  type        = string
+  description = "Name of custom VM image to use for VMSS. If not using a custom image, leave this blank."
+  default     = null
+}
+
+variable "vm_custom_image_rg_name" {
+  type        = string
+  description = "Name of Resource Group where `vm_custom_image_name` image resides. Only valid if `vm_custom_image_name` is not `null`."
+  default     = null
+
+  validation {
+    condition     = var.vm_custom_image_name != null ? var.vm_custom_image_rg_name != null : true
+    error_message = "A value is required when `vm_custom_image_name` is not `null`."
+  }
+}
 
 variable "image_reference" {
   type = object({
@@ -194,6 +220,8 @@ variable "image_reference" {
   }
   description = "Azure platform image details to use for VMSS instances"
 }
+
+
 #------------------------------------------------------------------------------
 # Networking
 #------------------------------------------------------------------------------

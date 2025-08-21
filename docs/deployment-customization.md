@@ -46,27 +46,15 @@ public_dns_zone_name            = "<example.com>"
 public_dns_zone_rg              = "<my-public-dns-zone-resource-group-name>"
 ```
 
-## Custom VM image
+## Custom VM Image
 
-If a custom VM image is preferred over using a standard marketplace image, the following variable may be set:
+If a custom VM image is preferred over using a standard marketplace image, the following variables may be set:
 
 ```hcl
-variable "image_reference" {
-  type = object({
-    publisher = string,
-    offer     = string,
-    sku       = string,
-    version   = string
-  })
-  default = {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
-    version   = "latest"
-  }
-  description = "Azure platform image details to use for VMSS instances"
-}
+vm_custom_image_name    = "<my-custom-ubuntu-2204-image>"
+vm_custom_image_rg_name = "<my-custom-image-resource-group-name>"
 ```
+
 
 ### Template customization
 
@@ -126,13 +114,14 @@ $ tree ./
 ├── terraform.tfvars.example
 ├── README.md
 ├── templates # copied from module
+├── templates
 │   ├── 00_init.yaml
-│   ├── install_consul.sh.tpl
-│   ├── install_consul_bootstrap_keyvault.sh.tpl
-│   ├── install_consul_config.sh.tpl
-│   ├── install_consul_secrets.sh.tpl
+│   ├── 01_install_consul.sh.tpl
+│   ├── 02_install_consul_config.sh.tpl
+│   ├── 03_install_consul_secrets.sh.tpl
+│   ├── 04_install_systemd_config.sh.tpl
+│   ├── 05_install_consul_bootstrap_keyvault.sh.tpl
 │   ├── install_snapshot_agent.sh.tpl
-│   ├── install_systemd_config.sh.tpl
 │   └── server.hcl.tpl
 └── variables.tf
 ```

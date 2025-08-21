@@ -18,6 +18,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "consul" {
   sku           = var.consul_vm_size
   overprovision = false
   upgrade_mode  = "Manual"
+	custom_data = local.cloudinit_config_rendered
 
   zones = var.availability_zones
   # zone_balance = false
@@ -28,15 +29,20 @@ resource "azurerm_linux_virtual_machine_scale_set" "consul" {
     public_key = var.ssh_public_key
     username   = var.ssh_username
   }
+  source_image_id = var.vm_custom_image_name != null ? data.azurerm_image.custom[0].id : null
 
-  source_image_reference {
-    publisher = var.image_reference.publisher
-    offer     = var.image_reference.offer
-    sku       = var.image_reference.sku
-    version   = var.image_reference.version
+  dynamic "source_image_reference" {
+    for_each = var.vm_custom_image_name == null ? [true] : []
+
+    content {
+      publisher = local.vm_image_publisher
+      offer     = local.vm_image_offer
+      sku       = local.vm_image_sku
+      version   = data.azurerm_platform_image.latest_os_image.version
+    }
   }
 
-  custom_data = local.cloudinit_config_rendered
+
   os_disk {
     caching                   = "ReadWrite"
     storage_account_type      = var.disk_params.root.disk_type
