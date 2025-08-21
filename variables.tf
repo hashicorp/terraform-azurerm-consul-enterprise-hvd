@@ -205,23 +205,6 @@ variable "vm_custom_image_rg_name" {
   }
 }
 
-variable "image_reference" {
-  type = object({
-    publisher = string,
-    offer     = string,
-    sku       = string,
-    version   = string
-  })
-  default = {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
-    version   = "latest"
-  }
-  description = "Azure platform image details to use for VMSS instances"
-}
-
-
 #------------------------------------------------------------------------------
 # Networking
 #------------------------------------------------------------------------------
