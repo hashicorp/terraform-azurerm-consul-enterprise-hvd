@@ -4,9 +4,15 @@ export SHELLOPTS
 set -euo pipefail
 
 LOGFILE="/var/log/consul-cloud-init.log"
+PRODUCT="consul"
+CONSUL_VERSION="${consul_version}"
+VERSION=$CONSUL_VERSION
+
+CONSUL_DIR_BIN="/usr/bin"
+
 CONSUL_DIR_HOME="/opt/consul/
 CONSUL_DIR_LICENSE="$${CONSUL_DIR_HOME}/license"
-
+CONSUL_DIR_DATA="$${CONSUL_DIR_HOME}/data"
 CONSUL_DIR_CONFIG="/etc/consul.d"
 CONSUL_DIR_TLS="/opt/consul/tls"
 CONSUL_USER="consul"
