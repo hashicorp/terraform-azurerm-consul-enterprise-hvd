@@ -37,10 +37,12 @@ exit_script() {
   exit "$1"
 }
 
-function install_consul_snapshot_agent{
-# parse resource id for key vault name. 3-24 character string, containing only 0-9, a-z, A-Z, and not consecutive -
+function install_consul_snapshot_agent {
+
+  #parse resource id for key vault name. 3-24 character string, containing only 0-9, a-z, A-Z, and not consecutive -
+
   log "INFO" "KV Secrets for $${PRODUCT} snapshot agent from vars"
-	KEYVAULT=$(grep -oE '[a-zA-Z0-9-]{3,}$' <<< "${consul_secrets.azure_keyvault.id}")
+  KEYVAULT=$(grep -oE '[a-zA-Z0-9-]{3,}$' <<< "${consul_secrets.azure_keyvault.id}")
 
   log "INFO" "Logging into Azure"
   az login --identity < /dev/null
