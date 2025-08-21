@@ -18,7 +18,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "consul" {
   sku           = var.consul_vm_size
   overprovision = false
   upgrade_mode  = "Manual"
-	custom_data = local.cloudinit_config_rendered
+  custom_data   = local.cloudinit_config_rendered
 
   zones = var.availability_zones
   # zone_balance = false
