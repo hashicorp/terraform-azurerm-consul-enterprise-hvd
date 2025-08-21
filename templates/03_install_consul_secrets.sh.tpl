@@ -14,7 +14,7 @@ CONSUL_DIR_HOME="/opt/consul/"
 CONSUL_DIR_LICENSE="$${CONSUL_DIR_HOME}/license"
 CONSUL_DIR_DATA="$${CONSUL_DIR_HOME}/data"
 CONSUL_DIR_CONFIG="/etc/consul.d"
-CONSUL_DIR_TLS="/opt/consul/tls"
+CONSUL_DIR_TLS="$${CONSUL_DIR_CONFIG}/tls"
 CONSUL_USER="consul"
 CONSUL_GROUP="consul"
 
@@ -58,17 +58,17 @@ function retrieve_consul_secrets {
   fi
 
   log "INFO" "Retrieving $${PRODUCT} TLS certificates"
-  az keyvault secret show --vault-name "$${KEYVAULT}" --name consul-agent-cert | jq -r .value | base64 -d >/etc/consul.d/tls/cert.pem
-  az keyvault secret show --vault-name "$${KEYVAULT}" --name consul-ca-cert | jq -r .value | base64 -d >/etc/consul.d/tls/ca.pem
+  az keyvault secret show --vault-name "$${KEYVAULT}" --name consul-agent-cert | jq -r .value | base64 -d >$CONSUL_DIR_TLS/cert.pem
+  az keyvault secret show --vault-name "$${KEYVAULT}" --name consul-ca-cert | jq -r .value | base64 -d >$CONSUL_DIR_TLS/ca.pem
 
 	(
-    log "INFO" "Retrieving $${PRODUCT} agent key"
 		umask 007
-    az keyvault secret show --vault-name "$${KEYVAULT}" --name consul-agent-key | jq -r .value | base64 -d >/etc/consul.d/tls/key.pem
+		log "INFO" "Retrieving $${PRODUCT} agent key"
+    az keyvault secret show --vault-name "$${KEYVAULT}" --name consul-agent-key | jq -r .value | base64 -d >$CONSUL_DIR_TLS/key.pem
     log "INFO" "Retrieving $${PRODUCT} license"
-		az keyvault secret show --vault-name "$${KEYVAULT}" --name consul-license | jq -r .value  >/etc/consul.d/consul.hclic
+		az keyvault secret show --vault-name "$${KEYVAULT}" --name consul-license | jq -r .value  >$CONSUL_DIR_CONFIG/consul.hclic
     log "INFO" "Retrieving $${PRODUCT} secrets"
-		echo "$${SECRET_CONFIG}" >/etc/consul.d/secrets.json
+		echo "$${SECRET_CONFIG}" >$CONSUL_DIR_CONFIG/secrets.json
   )
 	log "INFO" "Setting ownership for $${PRODUCT} configuration files"
   chown -R $CONSUL_USER:$CONSUL_GROUP $CONSUL_DIR_CONFIG

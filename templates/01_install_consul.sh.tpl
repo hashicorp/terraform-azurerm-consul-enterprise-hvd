@@ -13,10 +13,9 @@ CONSUL_DIR_HOME="/opt/consul/"
 CONSUL_DIR_LICENSE="$${CONSUL_DIR_HOME}/license"
 CONSUL_DIR_DATA="$${CONSUL_DIR_HOME}/data"
 CONSUL_DIR_CONFIG="/etc/consul.d"
-CONSUL_DIR_TLS="/opt/consul/tls"
+CONSUL_DIR_TLS="$${CONSUL_DIR_CONFIG}/tls"
 CONSUL_USER="consul"
 CONSUL_GROUP="consul"
-
 
 
 function log {
