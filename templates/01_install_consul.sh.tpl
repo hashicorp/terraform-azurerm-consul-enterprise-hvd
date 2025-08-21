@@ -9,7 +9,7 @@ VERSION=$CONSUL_VERSION
 
 CONSUL_DIR_BIN="/usr/bin"
 
-CONSUL_DIR_HOME="/opt/consul/
+CONSUL_DIR_HOME="/opt/consul/"
 CONSUL_DIR_LICENSE="$${CONSUL_DIR_HOME}/license"
 CONSUL_DIR_DATA="$${CONSUL_DIR_HOME}/data"
 CONSUL_DIR_CONFIG="/etc/consul.d"
@@ -177,4 +177,5 @@ main() {
   install_consul_binary $OS_ARCH
   log "INFO" "Consul Enterprise installation - complete"
 }
+
 main "$@"
