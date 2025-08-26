@@ -55,7 +55,6 @@ function detect_architecture {
   esac
 
   echo "$ARCHITECTURE"
-
 }
 
 function determine_os_distro {
