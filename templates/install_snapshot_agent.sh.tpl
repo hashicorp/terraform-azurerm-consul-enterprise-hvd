@@ -38,7 +38,6 @@ exit_script() {
 }
 
 function install_consul_snapshot_agent {
-
   #parse resource id for key vault name. 3-24 character string, containing only 0-9, a-z, A-Z, and not consecutive -
 
   log "INFO" "KV Secrets for $${PRODUCT} snapshot agent from vars"
