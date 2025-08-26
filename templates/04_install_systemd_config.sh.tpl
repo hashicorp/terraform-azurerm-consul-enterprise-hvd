@@ -37,7 +37,6 @@ exit_script() {
 }
 
 function generate_systemd_file {
-
   log "INFO" "Creating systemd service file for $${PRODUCT}"
   cat - <<'EOF' > /etc/systemd/system/consul.service
 [Unit]
