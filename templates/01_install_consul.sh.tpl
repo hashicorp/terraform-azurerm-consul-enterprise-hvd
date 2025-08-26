@@ -9,7 +9,7 @@ VERSION=$CONSUL_VERSION
 
 CONSUL_DIR_BIN="/usr/bin"
 
-CONSUL_DIR_HOME="/opt/consul/"
+CONSUL_DIR_HOME="/opt/consul"
 CONSUL_DIR_LICENSE="$${CONSUL_DIR_HOME}/license"
 CONSUL_DIR_DATA="$${CONSUL_DIR_HOME}/data"
 CONSUL_DIR_CONFIG="/etc/consul.d"
@@ -73,6 +73,7 @@ function determine_os_distro {
     *)
       log "ERROR" "'$os_distro_name' is not a supported Linux OS distro for BOUNDARY."
       exit_script 1
+			;;
   esac
 
   echo "$os_distro"
@@ -151,15 +152,6 @@ function install_consul_binary {
 
   log "INFO" "Consul binary installed successfully at $CONSUL_DIR_BIN/consul"
 }
-
-# curl -Lo consul.zip https://releases.hashicorp.com/consul/${consul_version}/consul_${consul_version}_linux_$DLARCH.zip
-
-# unzip consul.zip
-# install consul /usr/local/bin/
-
-# rm -f consul.zip consul
-
-# echo "Consul Enterprise installation - complete"
 
 main() {
   log "INFO" "Beginning Consul Enterprise installation"
