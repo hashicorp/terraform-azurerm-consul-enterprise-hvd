@@ -26,7 +26,7 @@ function log {
 
   echo "$log_entry" | tee -a "$LOGFILE"
 }
-exit_script() {
+function exit_script {
   if [[ "$1" == 0 ]]; then
     log "INFO" "Vault custom_data script finished successfully!"
   else
