@@ -72,7 +72,6 @@ function retrieve_consul_secrets {
 	log "INFO" "Setting ownership for $${PRODUCT} configuration files"
   chown -R $CONSUL_USER:$CONSUL_GROUP $CONSUL_DIR_CONFIG
 
-
 }
 
 # if agent-token key exists in key vault during bootstrap event the bootstrap script will overwrite
