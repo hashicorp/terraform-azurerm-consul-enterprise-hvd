@@ -36,7 +36,6 @@ exit_script() {
 }
 
 function generate_consul_config {
-
   REGION=$(curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance/compute/location?api-version=2023-07-01&format=text")
   AVAILABILITY_ZONE=$(curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance/compute/zone?api-version=2023-07-01&format=text")
 
