@@ -46,7 +46,7 @@ public_dns_zone_name            = "<example.com>"
 public_dns_zone_rg              = "<my-public-dns-zone-resource-group-name>"
 ```
 
-## Custom VM Image
+## Custom VM image
 
 If a custom VM image is preferred over using a standard marketplace image, the following variables may be set:
 
