@@ -7,9 +7,7 @@ LOGFILE="/var/log/consul-cloud-init.log"
 PRODUCT="consul"
 CONSUL_VERSION="${consul_version}"
 VERSION=$CONSUL_VERSION
-
 CONSUL_DIR_BIN="/usr/bin"
-
 CONSUL_DIR_HOME="/opt/consul/"
 CONSUL_DIR_LICENSE="$${CONSUL_DIR_HOME}/license"
 CONSUL_DIR_DATA="$${CONSUL_DIR_HOME}/data"
@@ -27,7 +25,7 @@ function log {
   echo "$log_entry" | tee -a "$LOGFILE"
 }
 
-exit_script() {
+function exit_script() {
   if [[ "$1" == 0 ]]; then
     log "INFO" "Vault custom_data script finished successfully!"
   else
@@ -45,7 +43,6 @@ function retrieve_consul_secrets {
 
 	az login --identity
   trap "az logout" EXIT
-
 
 	SECRETS=$(az keyvault secret list --vault-name "$${KEYVAULT}" | jq -re '[ .[].name ]')
   GOSSIP_KEY=$(az keyvault secret show --vault-name "$${KEYVAULT}" --name gossip-key | jq -r .value)

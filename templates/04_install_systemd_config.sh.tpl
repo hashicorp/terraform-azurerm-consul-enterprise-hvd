@@ -25,6 +25,7 @@ function log {
 
   echo "$log_entry" | tee -a "$LOGFILE"
 }
+
 function exit_script {
   if [[ "$1" == 0 ]]; then
     log "INFO" "Vault custom_data script finished successfully!"
@@ -64,16 +65,16 @@ StartLimitBurst=5
 WantedBy=multi-user.target
 EOF
 
-log "INFO" "Setting ownership and permissions for $${PRODUCT} systemd service files (/run/consul /opt/consul/data)"
+  log "INFO" "Setting ownership and permissions for $${PRODUCT} systemd service files (/run/consul /opt/consul/data)"
 
-mkdir /run/consul
-chown -R $CONSUL_USER:$CONSUL_GROUP /run/consul
-chmod 0770 /run/consul /opt/consul/data
+  mkdir /run/consul
+  chown -R $CONSUL_USER:$CONSUL_GROUP /run/consul
+  chmod 0770 /run/consul /opt/consul/data
 
-log "INFO" "Restarting $${PRODUCT} AND enabling systemd service"
-systemctl daemon-reload && systemctl enable --now consul.service
+  log "INFO" "Restarting $${PRODUCT} AND enabling systemd service"
+  systemctl daemon-reload && systemctl enable --now consul.service
 
-log "INFO" "$${PRODUCT} systemd service restarted and enabled"
+  log "INFO" "$${PRODUCT} systemd service restarted and enabled"
 }
 
 main() {

@@ -6,9 +6,7 @@ LOGFILE="/var/log/consul-cloud-init.log"
 PRODUCT="consul"
 CONSUL_VERSION="${consul_version}"
 VERSION=$CONSUL_VERSION
-
 CONSUL_DIR_BIN="/usr/bin"
-
 CONSUL_DIR_HOME="/opt/consul/"
 CONSUL_DIR_LICENSE="$${CONSUL_DIR_HOME}/license"
 CONSUL_DIR_DATA="$${CONSUL_DIR_HOME}/data"
@@ -27,7 +25,8 @@ function log {
 
   echo "$log_entry" | tee -a "$LOGFILE"
 }
-exit_script() {
+
+function exit_script() {
   if [[ "$1" == 0 ]]; then
     log "INFO" "Vault custom_data script finished successfully!"
   else
@@ -65,7 +64,6 @@ function install_consul_snapshot_agent {
   STORAGE_ACCOUNT_KEY=$(az keyvault secret show --vault-name "$${KEYVAULT}" --name storage-account-key | jq -er .value)
 
 	mkdir -p $CONSUL_DIR_SNAPSHOT
-
 
   log "INFO" "Creating Consul snapshot configuration file..."
   bash -c "cat > $CONSUL_DIR_SNAPSHOT/consul-snapshot.json" <<EOF
@@ -133,5 +131,3 @@ main() {
 }
 
 main "$@"
-
-

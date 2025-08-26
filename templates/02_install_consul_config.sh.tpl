@@ -15,8 +15,6 @@ CONSUL_DIR_TLS="$${CONSUL_DIR_CONFIG}/tls"
 CONSUL_USER="consul"
 CONSUL_GROUP="consul"
 
-
-
 function log {
   local level="$1"
   local message="$2"
@@ -25,7 +23,7 @@ function log {
 
   echo "$log_entry" | tee -a "$LOGFILE"
 }
-exit_script() {
+function exit_script() {
   if [[ "$1" == 0 ]]; then
     log "INFO" "Vault custom_data script finished successfully!"
   else
@@ -51,7 +49,6 @@ EOF
  sudo chmod 600 $CONSUL_DIR_CONFIG/server.hcl
  sudo chown consul:consul $CONSUL_DIR_CONFIG/server.hcl
 }
-
 
 main() {
   log "INFO" "Generating Consul configuration file"
