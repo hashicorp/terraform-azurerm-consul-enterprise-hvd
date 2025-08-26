@@ -56,7 +56,6 @@ EOF
 main() {
   log "INFO" "Generating Consul configuration file"
   generate_consul_config
-
 }
 
 main "$@"
