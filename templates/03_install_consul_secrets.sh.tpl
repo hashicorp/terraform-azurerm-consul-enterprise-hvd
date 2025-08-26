@@ -38,7 +38,6 @@ exit_script() {
 }
 
 function retrieve_consul_secrets {
-
   log "INFO" "Retrieving $${PRODUCT} secrets from Azure Key Vault"
   # parse resource id for key vault name. 3-24 character string, containing only 0-9, a-z, A-Z, and not consecutive -
   KEYVAULT=$(grep -oE '[a-zA-Z0-9-]{3,}$' <<< "${consul_secrets.azure_keyvault.id}")
