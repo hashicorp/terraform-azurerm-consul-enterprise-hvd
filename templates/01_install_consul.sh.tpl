@@ -131,7 +131,6 @@ function checksum_verify {
 
 	log "INFO" "Removing the downloaded files to clean up"
 	sudo rm -f "$${PRODUCT}"_"$${VERSION}"_SHA256SUMS "$${PRODUCT}"_"$${VERSION}"_SHA256SUMS.sig
-
 }
 
 # install_consul_binary downloads the Vault binary and puts it in dedicated bin directory
