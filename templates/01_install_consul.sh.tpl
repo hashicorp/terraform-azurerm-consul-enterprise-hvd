@@ -17,7 +17,6 @@ CONSUL_DIR_TLS="$${CONSUL_DIR_CONFIG}/tls"
 CONSUL_USER="consul"
 CONSUL_GROUP="consul"
 
-
 function log {
   local level="$1"
   local message="$2"
