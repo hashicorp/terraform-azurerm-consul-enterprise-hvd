@@ -196,7 +196,7 @@ variable "vm_custom_image_name" {
 
 variable "vm_custom_image_rg_name" {
   type        = string
-  description = "Name of Resource Group where `vm_custom_image_name` image resides. Only valid if `vm_custom_image_name` is not `null`."
+  description = "Name of resource group where `vm_custom_image_name` image resides. Only valid if `vm_custom_image_name` is not `null`."
   default     = null
 
   validation {
