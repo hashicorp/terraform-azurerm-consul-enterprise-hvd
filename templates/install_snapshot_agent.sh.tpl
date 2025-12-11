@@ -1,33 +1,72 @@
 #!/usr/bin/env bash
-set -eu
+export SHELLOPTS
+set -eou pipefail
 
-echo "Beginning Consul snapshot agent configuration"
+LOGFILE="/var/log/consul-cloud-init.log"
+PRODUCT="consul"
+CONSUL_VERSION="${consul_version}"
+VERSION=$CONSUL_VERSION
+CONSUL_DIR_BIN="/usr/bin"
+CONSUL_DIR_HOME="/opt/consul/"
+CONSUL_DIR_LICENSE="$${CONSUL_DIR_HOME}/license"
+CONSUL_DIR_DATA="$${CONSUL_DIR_HOME}/data"
+CONSUL_DIR_CONFIG="/etc/consul.d"
+CONSUL_DIR_SNAPSHOT="/etc/consul-snapshot.d"
+CONSUL_DIR_TLS="$${CONSUL_DIR_CONFIG}/tls"
+CONSUL_USER="consul"
+CONSUL_GROUP="consul"
 
-# parse resource id for key vault name. 3-24 character string, containing only 0-9, a-z, A-Z, and not consecutive -
-KEYVAULT=$(grep -oE '[a-zA-Z0-9-]{3,}$' <<< "${consul_secrets.azure_keyvault.id}")
 
-az login --identity < /dev/null
-trap "az logout" EXIT
+function log {
+  local level="$1"
+  local message="$2"
+  local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  local log_entry="$timestamp [$level] - $message"
 
-echo -n "waiting for the leader to be established..."
-until curl --fail --silent --show-error --unix-socket /run/consul/consul.sock http://localhost/v1/status/leader | grep -qE '(\.|:)+'  ; do
-  echo -n "."
-  sleep 5
-done
-echo "done"
+  echo "$log_entry" | tee -a "$LOGFILE"
+}
 
-echo -n "waiting for snapshot-token to be set in azure key vault..."
-until az keyvault secret list --vault-name "$${KEYVAULT}" | jq -e '.[] | select(.name=="snapshot-token")' ; do
-  echo -n "."
-  sleep 10
-done
-echo "done"
+function exit_script() {
+  if [[ "$1" == 0 ]]; then
+    log "INFO" "Vault custom_data script finished successfully!"
+  else
+    log "ERROR" "Vault custom_data script finished with error code $1."
+  fi
 
-SNAPSHOT_TOKEN=$(az keyvault secret show --vault-name "$${KEYVAULT}" --name snapshot-token | jq -er .value)
-STORAGE_ACCOUNT_KEY=$(az keyvault secret show --vault-name "$${KEYVAULT}" --name storage-account-key | jq -er .value)
+  exit "$1"
+}
 
-mkdir -p /etc/consul-snapshot.d
-bash -c "cat > /etc/consul-snapshot.d/consul-snapshot.json" <<EOF
+function install_consul_snapshot_agent {
+  #parse resource id for key vault name. 3-24 character string, containing only 0-9, a-z, A-Z, and not consecutive -
+
+  log "INFO" "KV Secrets for $${PRODUCT} snapshot agent from vars"
+  KEYVAULT=$(grep -oE '[a-zA-Z0-9-]{3,}$' <<< "${consul_secrets.azure_keyvault.id}")
+
+  log "INFO" "Logging into Azure"
+  az login --identity < /dev/null
+  trap "az logout" EXIT
+
+	log "INFO" "Waiting for the leader to be established..."
+  until curl --fail --silent --show-error --unix-socket /run/consul/consul.sock http://localhost/v1/status/leader | grep -qE '(\.|:)+'  ; do
+    echo -n "."
+    sleep 5
+  done
+  log "INFO" "Leader established."
+  log "INFO" "Waiting for snapshot-token to be set in Azure Key Vault..."
+  until az keyvault secret list --vault-name "$${KEYVAULT}" | jq -e '.[] | select(.name=="snapshot-token")' ; do
+    echo -n "."
+    sleep 10
+  done
+	log "INFO" "Snapshot token established in Azure Key Vault."
+
+	log "INFO" "Retrieving snapshot token and storage account key..."
+  SNAPSHOT_TOKEN=$(az keyvault secret show --vault-name "$${KEYVAULT}" --name snapshot-token | jq -er .value)
+  STORAGE_ACCOUNT_KEY=$(az keyvault secret show --vault-name "$${KEYVAULT}" --name storage-account-key | jq -er .value)
+
+	mkdir -p $CONSUL_DIR_SNAPSHOT
+
+  log "INFO" "Creating Consul snapshot configuration file..."
+  bash -c "cat > $CONSUL_DIR_SNAPSHOT/consul-snapshot.json" <<EOF
 {
   "snapshot_agent": {
     "http_addr": "unix:///run/consul/consul.sock",
@@ -51,7 +90,8 @@ bash -c "cat > /etc/consul-snapshot.d/consul-snapshot.json" <<EOF
 }
 EOF
 
-bash -c "cat > /etc/systemd/system/consul-snapshot.service" <<EOF
+  log "INFO" "Creating Consul snapshot service file..."
+  bash -c "cat > /etc/systemd/system/consul-snapshot.service" <<EOF
 [Unit]
 Description="HashiCorp Consul Snapshot Agent"
 Documentation=https://www.consul.io/
@@ -74,8 +114,20 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 EOF
 
-chown -R consul:consul /etc/consul-snapshot.d
-chmod -R 660 /etc/consul-snapshot.d/*
-systemctl daemon-reload && systemctl enable --now consul-snapshot.service
+  log "INFO" "Setting permissions for Consul snapshot directory..."
+  chown -R $CONSUL_USER:$CONSUL_GROUP $CONSUL_DIR_SNAPSHOT
+	chmod -R 750 $CONSUL_DIR_SNAPSHOT
+  chmod -R 660 $CONSUL_DIR_SNAPSHOT/*
 
-echo "Consul snapshot agent configuration - complete"
+  log "INFO" "Reloading systemd and enabling Consul snapshot service..."
+  systemctl daemon-reload && systemctl enable --now consul-snapshot.service
+
+}
+
+main() {
+  log "INFO" "Beginning $${PRODUCT} snapshot agent install and configuration"
+  install_consul_snapshot_agent
+  log "INFO" "Completed $${PRODUCT} snapshot agent install and configuration"
+}
+
+main "$@"

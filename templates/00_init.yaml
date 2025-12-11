@@ -11,7 +11,7 @@ fs_setup:
     device: /dev/disk/azure/scsi1/lun10
     partition: auto
 mounts:
-  - [/dev/disk/azure/scsi1/lun10, /opt/consul/data, auto, defaults, "0", "2"]
+  - [/dev/disk/azure/scsi1/lun10, /opt/consul, auto, defaults, "0", "2"]
 package_update: true
 packages:
   - unzip
