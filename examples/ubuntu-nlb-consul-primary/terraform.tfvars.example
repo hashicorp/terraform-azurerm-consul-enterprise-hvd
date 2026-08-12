@@ -25,6 +25,7 @@ consul_secrets = {
     id = "</subscriptions/12345678-3210-abcd-01ef-abcd5678cdef4321/resourceGroups/my-rg-name/providers/Microsoft.KeyVault/vaults/example-kv>"
   }
 }
+use_key_vault_rbac = false
 
 #------------------------------------------------------------------------------
 # Compute

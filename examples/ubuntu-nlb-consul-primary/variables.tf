@@ -113,6 +113,12 @@ variable "consul_secrets" {
   }
 }
 
+variable "use_key_vault_rbac" {
+  type        = bool
+  description = "Whether to use Azure RBAC instead of a legacy access policy for Key Vault data-plane access."
+  default     = false
+}
+
 #------------------------------------------------------------------------------
 # Compute
 #------------------------------------------------------------------------------
@@ -271,4 +277,3 @@ variable "private_dns_zone_rg" {
   description = "(Optional string) Name of Resource Group where `private_dns_zone_name` resides. Required when `create_consul_private_dns_record` is `true`."
   default     = null
 }
-

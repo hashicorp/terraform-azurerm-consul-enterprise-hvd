@@ -38,7 +38,8 @@ module "default" {
   ssh_username           = var.ssh_username
   ssh_public_key         = var.ssh_public_key
 
-  consul_secrets = var.consul_secrets
-  consul_agent   = var.consul_agent
-  snapshot_agent = var.snapshot_agent
+  consul_secrets     = var.consul_secrets
+  use_key_vault_rbac = var.use_key_vault_rbac
+  consul_agent       = var.consul_agent
+  snapshot_agent     = var.snapshot_agent
 }
