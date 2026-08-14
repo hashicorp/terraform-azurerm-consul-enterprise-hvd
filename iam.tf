@@ -15,12 +15,16 @@ resource "azurerm_role_assignment" "consul_reader" {
 }
 
 resource "azurerm_role_assignment" "consul_kvso" {
+  count = var.use_key_vault_rbac ? 1 : 0
+
   scope                = var.consul_secrets.azure_keyvault.id
   role_definition_name = "Key Vault Secrets Officer"
   principal_id         = azurerm_user_assigned_identity.consul_iam.principal_id
 }
 
 resource "azurerm_key_vault_access_policy" "kv_reader" {
+  count = var.use_key_vault_rbac ? 0 : 1
+
   key_vault_id = var.consul_secrets.azure_keyvault.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = azurerm_user_assigned_identity.consul_iam.principal_id

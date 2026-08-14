@@ -101,22 +101,22 @@ Please note that there is no official Service Level Agreement (SLA) for support 
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.9 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >=3.113.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >=3.113.0, < 5.0 |
 | <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | >=2.3.2 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >=3.113.0 |
+| ---- | ------- |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >=3.113.0, < 5.0 |
 | <a name="provider_cloudinit"></a> [cloudinit](#provider\_cloudinit) | >=2.3.2 |
 
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [azurerm_application_security_group.consul_agents](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_security_group) | resource |
 | [azurerm_dns_a_record.consul](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_a_record) | resource |
 | [azurerm_key_vault_access_policy.kv_reader](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_access_policy) | resource |
@@ -143,7 +143,7 @@ Please note that there is no official Service Level Agreement (SLA) for support 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | (Required List(string)) List of availability zones to deploy supported resources to. Only works in select regions. | `list(string)` | n/a | yes |
 | <a name="input_consul_agent"></a> [consul\_agent](#input\_consul\_agent) | Object containing the Consul Agent configuration. | <pre>object({<br/>    bootstrap_acls = optional(bool, true)<br/>    datacenter     = optional(string, "dc1")<br/>  })</pre> | n/a | yes |
 | <a name="input_consul_fqdn"></a> [consul\_fqdn](#input\_consul\_fqdn) | (required string) Fully qualified domain name of the consul cluster. This name __must__ match a SAN entry in the TLS server certificate. | `string` | n/a | yes |
@@ -173,6 +173,7 @@ Please note that there is no official Service Level Agreement (SLA) for support 
 | <a name="input_snapshot_agent"></a> [snapshot\_agent](#input\_snapshot\_agent) | Configures the Consul snapshot agent to store backups to an Azure Storage Account. | <pre>object({<br/>    enabled               = bool<br/>    storage_account_name  = optional(string)<br/>    object_container_name = optional(string)<br/>    azure_environment     = optional(string, "AZURECLOUD")<br/>    interval              = optional(string, "30m")<br/>    retention             = optional(number, 336) # 1 week @ 30m interval<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_ssh_username"></a> [ssh\_username](#input\_ssh\_username) | (Optional string) Default username to add to VMSS instances. | `string` | `"azureuser"` | no |
 | <a name="input_storage_account_type"></a> [storage\_account\_type](#input\_storage\_account\_type) | (Optional string) Redundancy type for the Consul Snapshot storage account. Must be one of LRS, GRS, or RAGRS. | `string` | `"GRS"` | no |
+| <a name="input_use_key_vault_rbac"></a> [use\_key\_vault\_rbac](#input\_use\_key\_vault\_rbac) | Whether to use Azure RBAC instead of a legacy access policy for Key Vault data-plane access. | `bool` | `false` | no |
 | <a name="input_vm_custom_image_name"></a> [vm\_custom\_image\_name](#input\_vm\_custom\_image\_name) | Name of custom VM image to use for VMSS. If not using a custom image, leave this blank. | `string` | `null` | no |
 | <a name="input_vm_custom_image_rg_name"></a> [vm\_custom\_image\_rg\_name](#input\_vm\_custom\_image\_rg\_name) | Name of Resource Group where `vm_custom_image_name` image resides. Only valid if `vm_custom_image_name` is not `null`. | `string` | `null` | no |
 | <a name="input_vm_os_image"></a> [vm\_os\_image](#input\_vm\_os\_image) | The OS image to use for the VM. Options are: redhat8, redhat9, ubuntu2204, ubuntu2404. | `string` | `"ubuntu2404"` | no |
