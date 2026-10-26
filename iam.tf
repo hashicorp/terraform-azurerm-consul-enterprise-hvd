@@ -1,4 +1,4 @@
-# Copyright IBM Corp. 2024, 2025
+# Copyright IBM Corp. 2024, 2026
 # SPDX-License-Identifier: MPL-2.0
 
 resource "azurerm_user_assigned_identity" "consul_iam" {
